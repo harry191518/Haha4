@@ -72,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
         private float BoardX[] = new float[15];
         private float BoardY[] = new float[15];
         private int Chess[][] = new int[15][15];
+        private int point[][] = new int[15][15];
 
         private float mov_x;
         private float mov_y;
@@ -105,7 +106,17 @@ public class MainActivity extends ActionBarActivity {
             }
 
             paint.setStyle(Style.FILL);
+            SetPoint();
+        }
 
+        // set chessboard priority
+        public void SetPoint() {
+            for(int i = 0; i < 15; i++)
+                for(int j = 0; j < 15; j++) {
+                    int a = (i <= (14 - i)) ? i : (14 - i);
+                    int b = (j <= (14 - j)) ? j : (14 - j);
+                    point[i][j] = (a <= b) ? a + 1 : b + 1;
+                }
         }
 
         @Override
@@ -115,7 +126,7 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            if (event.getAction()==MotionEvent.ACTION_DOWN) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 int check = 0;
                 mov_x = event.getX();
                 mov_y = event.getY();
@@ -148,6 +159,8 @@ public class MainActivity extends ActionBarActivity {
                         canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
                         invalidate();
                     }
+
+                    StandardAI();
                 }
             }
             mov_x = event.getX();
@@ -188,6 +201,244 @@ public class MainActivity extends ActionBarActivity {
                 }
 
             return 0;
+        }
+
+        public void StandardAI() {
+            int x = 7, y = 7;
+            int p, max = 0;
+
+            for(int i = 0; i < 15; i++)
+                for(int j = 0; j < 15; j++) {
+                    if(Chess[i][j] != 0) continue;
+                    p = point[i][j];
+                    p += two(i, j, who);
+                    p += three(i, j, who);
+                    p += four(i, j, who);
+                    p += five(i, j, who);
+                    p += defendfour(i, j, who);
+                    p += defendfive(i, j, who);
+                    if(p > max){
+                        x = i;
+                        y = j;
+                        max = p;
+                    }
+                }
+
+            Chess[x][y] = (who) ? 1 : 2;
+            if(who) paint.setColor(Color.BLACK);
+            else paint.setColor(Color.WHITE);
+            canvas.drawCircle(BoardX[x], BoardY[y], spacing / 2 - 1, paint);
+            invalidate();
+            who = !who;
+
+            if(StandardWin() == 1) {
+                paint.setColor(Color.BLACK);
+                canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
+                invalidate();
+            }
+            else if(StandardWin() == 2) {
+                paint.setColor(Color.WHITE);
+                canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
+                invalidate();
+            }
+        }
+
+        public int two(int x, int y, boolean who) {
+            int a = (who) ? 1 : 2;
+            int b = (who) ? 2 : 1;
+            int p = 0;
+
+            for(int i = -1; i <= 1; i++)
+                for(int j = -1; j <= 1; j++) {
+                    if(x + 3 * i < 0 || y + 3 * j < 0 || x + 3 * i > 14 || y + 3 * j > 14
+                       || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
+                    else {
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == 0
+                           && Chess[x + 3 * i][y + 3 * j] == 0) {
+                            if(Chess[x - i][y - j] != b && Chess[x - 2 * i][y - 2 * j] != b)
+                                p += 3;
+                            if(Chess[x - i][y - j] != b && Chess[x - 2 * i][y - 2 * j] == b)
+                                p += 2;
+                        }
+                        if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == 0) {
+                            if(Chess[x - i][y - j] != b && Chess[x - 2 * i][y - 2 * j] != b)
+                                p += 2;
+                            if(Chess[x - i][y - j] != b && Chess[x - 2 * i][y - 2 * j] == b)
+                                p += 1;
+                        }
+                    }
+                }
+
+            return p;
+        }
+
+        public int three(int x, int y, boolean who) {
+            int a = (who) ? 1 : 2;
+            int b = (who) ? 2 : 1;
+            int p = 0;
+
+            for(int i = -1; i <= 1; i++)
+                for(int j = -1; j <= 1; j++) {
+                    if(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
+                       || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
+                    else {
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a) {
+                            if(Chess[x + 3 * i][y + 3 * j] == 0 && Chess[x + 4 * i][y + 4 * j] == 0
+                               && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == 0)
+                                p += 8;
+                            if(Chess[x + 3 * i][y + 3 * j] == 0 && Chess[x + 4 * i][y + 4 * j] == 0
+                               && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == b)
+                                p += 4;
+                            if(Chess[x + 3 * i][y + 3 * j] == 0 && Chess[x + 4 * i][y + 4 * j] == b
+                               && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == 0)
+                                p += 4;
+                        }
+                        if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == a) {
+                            if(Chess[x + 4 * i][y + 4 * j] == 0 && Chess[x - i][y - j] == 0)
+                                p += 5;
+                        }
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == 0
+                           && Chess[x + 3 * i][y + 3 * j] == a) {
+                            if(Chess[x + 4 * i][y + 4 * j] == 0 && Chess[x - i][y - j] == 0)
+                                p += 5;
+                        }
+                    }
+                }
+
+            return p;
+        }
+
+        public int four(int x, int y, boolean who) {
+            int a = (who) ? 1 : 2;
+            int p = 0;
+
+            for(int i = -1; i <= 1; i++)
+                for(int j = -1; j <= 1; j++) {
+                    if(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
+                            || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
+                    else {
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == a) {
+                            if(Chess[x + 4 * i][y + 4 * j] == 0 || Chess[x - i][y - j] == 0)
+                                p += 25;
+                        }
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x - i][y - j] == a) {
+                            if(Chess[x + 3 * i][y + 3 * j] == 0 || Chess[x - 2 * i][y - 2 * j] == 0)
+                                p += 25;
+                        }
+                        if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
+                            p += 20;
+                        }
+                        if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
+                            p += 20;
+                        }
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == a) {
+                            p += 20;
+                        }
+                    }
+                }
+
+            return p;
+        }
+
+        public int five(int x, int y, boolean who) {
+            int a = (who) ? 1 : 2;
+            int p = 0;
+
+            for(int i = -1; i <= 1; i++)
+                for(int j = -1; j <= 1; j++) {
+                    if(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
+                            || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
+                    else {
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
+                            p += 150;
+                        }
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
+                            p += 150;
+                        }
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x - i][y - j] == a && Chess[x - 2 * i][y - 2 * j] == a) {
+                            p += 150;
+                        }
+                    }
+                }
+
+            return p;
+        }
+
+        public int defendfour(int x, int y, boolean who) {
+            int a = (who) ? 2 : 1;
+            int b = (who) ? 1 : 2;
+            int p = 0;
+
+            for(int i = -1; i <= 1; i++)
+                for(int j = -1; j <= 1; j++) {
+                    if(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
+                            || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
+                    else {
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == 0) {
+                            if(Chess[x - i][y - j] == b)
+                                p += 10;
+                            else
+                                p += 22;
+                        }
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x - i][y - j] == a) {
+                            if(Chess[x + 3 * i][y + 3 * j] == 0 || Chess[x - 2 * i][y - 2 * j] == 0)
+                                p += 22;
+                        }
+                        if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
+                                && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
+                            p += 15;
+                        }
+                        if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
+                                && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
+                            p += 15;
+                        }
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                                && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == a) {
+                            p += 15;
+                        }
+                    }
+                }
+
+            return p;
+        }
+
+        public int defendfive(int x, int y, boolean who) {
+            int a = (who) ? 2 : 1;
+            int p = 0;
+
+            for(int i = -1; i <= 1; i++)
+                for(int j = -1; j <= 1; j++) {
+                    if(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
+                            || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
+                    else {
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
+                            p += 120;
+                        }
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
+                            p += 120;
+                        }
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x - i][y - j] == a && Chess[x - 2 * i][y - 2 * j] == a) {
+                            p += 120;
+                        }
+                    }
+                }
+
+            return p;
         }
     }
 }
