@@ -280,20 +280,22 @@ public class MainActivity extends ActionBarActivity {
 
             for(int i = -1; i <= 1; i++)
                 for(int j = -1; j <= 1; j++) {
-                    if(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
-                       || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
-                    else {
+                    if(!(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
+                       || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a) {
                             if(Chess[x + 3 * i][y + 3 * j] == 0 && Chess[x + 4 * i][y + 4 * j] == 0
-                               && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == 0)
+                                    && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == 0)
                                 p += 8;
                             if(Chess[x + 3 * i][y + 3 * j] == 0 && Chess[x + 4 * i][y + 4 * j] == 0
-                               && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == b)
+                                    && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == b)
                                 p += 4;
                             if(Chess[x + 3 * i][y + 3 * j] == 0 && Chess[x + 4 * i][y + 4 * j] == b
-                               && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == 0)
+                                    && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == 0)
                                 p += 4;
                         }
+                    }
+                    if(!(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
+                       || x - i < 0 || y - j < 0 || x - i > 14 || y - j > 14)) {
                         if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x + 3 * i][y + 3 * j] == a) {
                             if(Chess[x + 4 * i][y + 4 * j] == 0 && Chess[x - i][y - j] == 0)
@@ -316,30 +318,38 @@ public class MainActivity extends ActionBarActivity {
 
             for(int i = -1; i <= 1; i++)
                 for(int j = -1; j <= 1; j++) {
-                    if(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
-                            || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
-                    else {
+                    if(!(x + 3 * i < 0 || y + 3 * j < 0 || x + 3 * i > 14 || y + 3 * j > 14
+                       || x - i < 0 || y - j < 0 || x - i > 14 || y - j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x + 3 * i][y + 3 * j] == a) {
-                            if(Chess[x + 4 * i][y + 4 * j] == 0 || Chess[x - i][y - j] == 0)
-                                p += 25;
-                        }
-                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
-                           && Chess[x - i][y - j] == a) {
-                            if(Chess[x + 3 * i][y + 3 * j] == 0 || Chess[x - 2 * i][y - 2 * j] == 0)
-                                p += 25;
-                        }
-                        if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
-                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
-                            p += 20;
+                            if(Chess[x - i][y - j] == 0)
+                                p += 32;
                         }
                         if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
-                            p += 20;
+                            p += 15;
                         }
+                    }
+                    if(!(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14)) {
+                        if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
+                            p += 18;
+                        }
+
+                    }
+                    if(!(x + 3 * i < 0 || y + 3 * j < 0 || x + 3 * i > 14 || y + 3 * j > 14
+                       || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14)) {
+                        if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
+                           && Chess[x - i][y - j] == a) {
+                            if(Chess[x + 3 * i][y + 3 * j] == 0 || Chess[x - 2 * i][y - 2 * j] == 0)
+                                p += 30;
+                        }
+                    }
+                    if(!(x + 2 * i < 0 || y + 2 * j < 0 || x + 2 * i > 14 || y + 2 * j > 14
+                       || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == a) {
-                            p += 20;
+                            p += 16;
                         }
                     }
                 }
@@ -353,17 +363,21 @@ public class MainActivity extends ActionBarActivity {
 
             for(int i = -1; i <= 1; i++)
                 for(int j = -1; j <= 1; j++) {
-                    if(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
-                            || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
-                    else {
+                    if(!(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
                             p += 150;
                         }
+                    }
+                    if(!(x + 3 * i < 0 || y + 3 * j < 0 || x + 3 * i > 14 || y + 3 * j > 14
+                       || x - i < 0 || y - j < 0 || x - i > 14 || y - j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
                             p += 150;
                         }
+                    }
+                    if(!(x + 2 * i < 0 || y + 2 * j < 0 || x + 2 * i > 14 || y + 2 * j > 14
+                       || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x - i][y - j] == a && Chess[x - 2 * i][y - 2 * j] == a) {
                             p += 150;
@@ -381,9 +395,8 @@ public class MainActivity extends ActionBarActivity {
 
             for(int i = -1; i <= 1; i++)
                 for(int j = -1; j <= 1; j++) {
-                    if(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
-                            || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
-                    else {
+                    if(!(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
+                       || x - i < 0 || y - j < 0 || x - i > 14 || y - j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == 0) {
                             if(Chess[x - i][y - j] == b)
@@ -391,22 +404,33 @@ public class MainActivity extends ActionBarActivity {
                             else
                                 p += 22;
                         }
+                    }
+                    if(!(x + 3 * i < 0 || y + 3 * j < 0 || x + 3 * i > 14 || y + 3 * j > 14
+                       || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x - i][y - j] == a) {
                             if(Chess[x + 3 * i][y + 3 * j] == 0 || Chess[x - 2 * i][y - 2 * j] == 0)
                                 p += 18;
                         }
+                    }
+                    if(!(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14)) {
                         if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
-                                && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
+                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
                             p += 5;
                         }
+                    }
+                    if(!(x + 3 * i < 0 || y + 3 * j < 0 || x + 3 * i > 14 || y + 3 * j > 14
+                       || x - i < 0 || y - j < 0 || x - i > 14 || y - j > 14)) {
                         if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
-                                && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
-                            p += 15;
+                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
+                            p += 10;
                         }
+                    }
+                    if(!(x + 2 * i < 0 || y + 2 * j < 0 || x + 2 * i > 14 || y + 2 * j > 14
+                       || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
-                                && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == a) {
-                            p += 15;
+                           && Chess[x - i][y - j] == 0 && Chess[x - 2 * i][y - 2 * j] == a) {
+                            p += 12;
                         }
                     }
                 }
@@ -420,19 +444,23 @@ public class MainActivity extends ActionBarActivity {
 
             for(int i = -1; i <= 1; i++)
                 for(int j = -1; j <= 1; j++) {
-                    if(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14
-                            || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14) ;
-                    else {
+                    if(!(x + 4 * i < 0 || y + 4 * j < 0 || x + 4 * i > 14 || y + 4 * j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
                             p += 120;
                         }
+                    }
+                    if(!(x + 3 * i < 0 || y + 3 * j < 0 || x + 3 * i > 14 || y + 3 * j > 14
+                            || x - i < 0 || y - j < 0 || x - i > 14 || y - j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
-                           && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
+                                && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
                             p += 120;
                         }
+                    }
+                    if(!(x + 2 * i < 0 || y + 2 * j < 0 || x + 2 * i > 14 || y + 2 * j > 14
+                            || x - 2 * i < 0 || y - 2 * j < 0 || x - 2 * i > 14 || y - 2 * j > 14)) {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
-                           && Chess[x - i][y - j] == a && Chess[x - 2 * i][y - 2 * j] == a) {
+                                && Chess[x - i][y - j] == a && Chess[x - 2 * i][y - 2 * j] == a) {
                             p += 120;
                         }
                     }
