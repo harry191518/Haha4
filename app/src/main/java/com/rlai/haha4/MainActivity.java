@@ -80,6 +80,8 @@ public class MainActivity extends ActionBarActivity {
         private Paint paint;
         private Canvas canvas;
         private Bitmap bitmap;
+        private int a = 0, b = 0; //advance game
+        private int count = 0;
         //private int blcolor;
 
         public Chessing(Context context) { //畫棋盤
@@ -149,7 +151,8 @@ public class MainActivity extends ActionBarActivity {
                     invalidate();
                     who = !who;
 
-                    if(StandardWin() == 1) {
+                    // standard version
+                    /*if(StandardWin() == 1) {
                         paint.setColor(Color.BLACK);
                         canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
                         invalidate();
@@ -158,6 +161,41 @@ public class MainActivity extends ActionBarActivity {
                         paint.setColor(Color.WHITE);
                         canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
                         invalidate();
+                    }*/
+
+                    // advance version
+                    int win = AdvanceWin();
+                    if(win == 1) {
+                        a++;
+                        for(int i = 0; i < 15; i++)
+                            for(int j = 0; j < 15; j++)
+                                if(Chess[i][j] == 3) {
+                                    paint.setColor(Color.GRAY);
+                                    canvas.drawCircle(BoardX[i], BoardY[j], spacing / 2 - 1, paint);
+                                    invalidate();
+                                }
+
+                        if(a == 3) {
+                            paint.setColor(Color.BLACK);
+                            canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
+                            invalidate();
+                        }
+                    }
+                    else if(win == 2) {
+                        b++;
+                        for(int i = 0; i < 15; i++)
+                            for(int j = 0; j < 15; j++)
+                                if(Chess[i][j] == 3) {
+                                    paint.setColor(Color.GRAY);
+                                    canvas.drawCircle(BoardX[i], BoardY[j], spacing / 2 - 1, paint);
+                                    invalidate();
+                                }
+
+                        if(b == 3) {
+                            paint.setColor(Color.WHITE);
+                            canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
+                            invalidate();
+                        }
                     }
 
                     StandardAI();
@@ -203,6 +241,77 @@ public class MainActivity extends ActionBarActivity {
             return 0;
         }
 
+        public int AdvanceWin() {
+            int win;
+
+            for(int i = 0; i < 15; i++)
+                for(int j = 0; j < 15; j++) {
+                    win = Chess[i][j];
+                    if ((i < 2 || i >= 13) && (j < 2 || j >= 13) || win == 0 || win == 3) ;
+                    else if ((i < 2 || i >= 13) && j >= 2 && j < 13) {
+                        if (Chess[i][j-1] == win && Chess[i][j-2] == win &&
+                                Chess[1][j+1] == win && Chess[i][j+2] == win) {
+                            Chess[i][j-1] = 3;
+                            Chess[i][j-2] = 3;
+                            Chess[i][j] = 3;
+                            Chess[i][j+1] = 3;
+                            Chess[i][j+2] = 3;
+                            return win;
+                        }
+                    } else if ((j < 2 || j >= 13) && i >= 2 && i < 13) {
+                        if (Chess[i-1][j] == win && Chess[i-2][j] == win &&
+                                Chess[i+1][j] == win && Chess[i+2][j] == win) {
+                            Chess[i-1][j] = 3;
+                            Chess[i-2][j] = 3;
+                            Chess[i][j] = 3;
+                            Chess[i+1][j] = 3;
+                            Chess[i+2][j] = 3;
+                            return win;
+                        }
+                    }
+                    else {
+                        if (Chess[i-1][j] == win && Chess[i-2][j] == win &&
+                                Chess[i+1][j] == win && Chess[i+2][j] == win) {
+                            Chess[i-1][j] = 3;
+                            Chess[i-2][j] = 3;
+                            Chess[i][j] = 3;
+                            Chess[i+1][j] = 3;
+                            Chess[i+2][j] = 3;
+                            return win;
+                        }
+                        if (Chess[i][j-1] == win && Chess[i][j-2] == win &&
+                                Chess[i][j+1] == win && Chess[i][j+2] == win) {
+                            Chess[i][j-1] = 3;
+                            Chess[i][j-2] = 3;
+                            Chess[i][j] = 3;
+                            Chess[i][j+1] = 3;
+                            Chess[i][j+2] = 3;
+                            return win;
+                        }
+                        if (Chess[i-1][j-1] == win && Chess[i-2][j-2] == win &&
+                                Chess[i+1][j+1] == win && Chess[i+2][j+2] == win) {
+                            Chess[i-1][j-1] = 3;
+                            Chess[i-2][j-2] = 3;
+                            Chess[i][j] = 3;
+                            Chess[i+1][j+1] = 3;
+                            Chess[i+2][j+2] = 3;
+                            return win;
+                        }
+                        if (Chess[i-1][j+1] == win && Chess[i-2][j+2] == win &&
+                                Chess[i+1][j-1] == win && Chess[i+2][j-2] == win) {
+                            Chess[i-1][j+1] = 3;
+                            Chess[i-2][j+2] = 3;
+                            Chess[i][j] = 3;
+                            Chess[i+1][j-1] = 3;
+                            Chess[i+2][j-2] = 3;
+                            return win;
+                        }
+                    }
+                }
+
+            return 0;
+        }
+
         public void StandardAI() {
             int x = 7, y = 7;
             int p, max = 0;
@@ -231,7 +340,8 @@ public class MainActivity extends ActionBarActivity {
             invalidate();
             who = !who;
 
-            if(StandardWin() == 1) {
+            // standard version
+            /*if(StandardWin() == 1) {
                 paint.setColor(Color.BLACK);
                 canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
                 invalidate();
@@ -240,6 +350,41 @@ public class MainActivity extends ActionBarActivity {
                 paint.setColor(Color.WHITE);
                 canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
                 invalidate();
+            }*/
+
+            // advance version
+            int win = AdvanceWin();
+            if(win == 1) {
+                a++;
+                for(int i = 0; i < 15; i++)
+                    for(int j = 0; j < 15; j++)
+                        if(Chess[i][j] == 3) {
+                            paint.setColor(Color.GRAY);
+                            canvas.drawCircle(BoardX[i], BoardY[j], spacing / 2 - 1, paint);
+                            invalidate();
+                        }
+
+                if(a == 3) {
+                    paint.setColor(Color.BLACK);
+                    canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
+                    invalidate();
+                }
+            }
+            else if(win == 2) {
+                b++;
+                for(int i = 0; i < 15; i++)
+                    for(int j = 0; j < 15; j++)
+                        if(Chess[i][j] == 3) {
+                            paint.setColor(Color.GRAY);
+                            canvas.drawCircle(BoardX[i], BoardY[j], spacing / 2 - 1, paint);
+                            invalidate();
+                        }
+
+                if(b == 3) {
+                    paint.setColor(Color.WHITE);
+                    canvas.drawCircle(20, 20, spacing / 2 - 1, paint);
+                    invalidate();
+                }
             }
         }
 
