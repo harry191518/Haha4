@@ -387,18 +387,18 @@ public class MainActivity extends ActionBarActivity {
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == 0) {
                             if(Chess[x - i][y - j] == b)
-                                p += 10;
+                                p += 5;
                             else
                                 p += 22;
                         }
                         if(Chess[x + i][y + j] == a && Chess[x + 2 * i][y + 2 * j] == a
                            && Chess[x - i][y - j] == a) {
                             if(Chess[x + 3 * i][y + 3 * j] == 0 || Chess[x - 2 * i][y - 2 * j] == 0)
-                                p += 22;
+                                p += 18;
                         }
                         if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
                                 && Chess[x + 3 * i][y + 3 * j] == a && Chess[x + 4 * i][y + 4 * j] == a) {
-                            p += 15;
+                            p += 5;
                         }
                         if(Chess[x + i][y + j] == 0 && Chess[x + 2 * i][y + 2 * j] == a
                                 && Chess[x + 3 * i][y + 3 * j] == a && Chess[x - i][y - j] == a) {
