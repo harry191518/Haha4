@@ -20,6 +20,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.DisplayMetrics;
+import java.util.Random;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -314,7 +315,9 @@ public class MainActivity extends ActionBarActivity {
 
         public void StandardAI() {
             int x = 7, y = 7;
-            int p, max = 0;
+            int p, max = 0, n = 0;
+            int r[] = new int[225];
+            Random ran = new Random();
 
             for(int i = 0; i < 15; i++)
                 for(int j = 0; j < 15; j++) {
@@ -330,8 +333,19 @@ public class MainActivity extends ActionBarActivity {
                         x = i;
                         y = j;
                         max = p;
+                        n = 0;
+                        r[n++] = 100 * x + y;
+                    }
+                    else if(p == max) {
+                        r[n++] = 100 * i + j;
                     }
                 }
+
+            if(n > 1) {
+                n = ran.nextInt(n);
+                x = r[n] / 100;
+                y = r[n] % 100;
+            }
 
             Chess[x][y] = (who) ? 1 : 2;
             if(who) paint.setColor(Color.BLACK);
